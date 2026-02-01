@@ -16,7 +16,7 @@
     "@capacitor/android": "^6.2.1",
     "@capacitor/cli": "^6.2.1",
     "@capacitor/core": "^6.2.1",
-    "@capacitor/local-notifications": "^8.0.0",
+    "@capacitor/local-notifications": "^6.0.0",
     "@vitejs/plugin-react-swc": "^4.2.2",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.29.2",
