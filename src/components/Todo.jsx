@@ -5,8 +5,13 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 
 export default function Todo({ isPremium }) {
     const [tasks, setTasks] = useState(() => {
-        const saved = localStorage.getItem('got-u-tasks');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem('got-u-tasks');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error("Error parsing tasks from localStorage", e);
+            return [];
+        }
     });
     const [input, setInput] = useState('');
 

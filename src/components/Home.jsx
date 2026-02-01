@@ -28,8 +28,18 @@ export default function Home() {
     }, []);
 
     const refreshQuote = () => {
-        const localQuotes = JSON.parse(localStorage.getItem('got-u-quotes') || '[]');
-        const allQuotes = localQuotes.length > 0 ? localQuotes : DEFAULT_QUOTES;
+        let allQuotes = DEFAULT_QUOTES;
+        try {
+            const saved = localStorage.getItem('got-u-quotes');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    allQuotes = parsed;
+                }
+            }
+        } catch (e) {
+            console.error("Error parsing quotes from localStorage", e);
+        }
         setQuote(allQuotes[Math.floor(Math.random() * allQuotes.length)]);
     };
 
