@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, CheckCircle2, Circle, Bell } from 'lucide-react';
+import { Plus, Trash2, CheckCircle2, Circle, Bell, ListTodo } from 'lucide-react';
 import { LocalNotifications } from '@capacitor/local-notifications';
 
 export default function Todo({ isPremium, tasks, setTasks }) {

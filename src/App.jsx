@@ -10,7 +10,8 @@ function App() {
     const [tasks, setTasks] = useState(() => {
         try {
             const saved = localStorage.getItem('got-u-tasks');
-            return saved ? JSON.parse(saved) : [];
+            const parsed = saved ? JSON.parse(saved) : [];
+            return Array.isArray(parsed) ? parsed : [];
         } catch (e) {
             console.error("Error parsing tasks from localStorage", e);
             return [];
