@@ -6,13 +6,11 @@ import TodoView from './components/Todo';
 import CalendarView from './components/Calendar';
 
 function App() {
-    console.log("App.jsx: Rendering App component");
     const [activeTab, setActiveTab] = useState('home');
     const isPremium = true; // All features unlocked
 
     // Load premium status
     useEffect(() => {
-        console.log("App.jsx: App mounted");
     }, []);
 
     const tabs = [
@@ -23,7 +21,6 @@ function App() {
 
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-black text-white" style={{ height: '100vh' }}>
-            <div style={{ position: 'fixed', top: 0, left: 0, background: 'red', color: 'white', zIndex: 9999 }}>APP LOADED</div>
             {/* Main Content Areas */}
             <main className="flex-1 overflow-y-auto relative pb-20">
                 <AnimatePresence mode="wait">
