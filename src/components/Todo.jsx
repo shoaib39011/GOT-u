@@ -3,34 +3,38 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, CheckCircle2, Circle, Bell } from 'lucide-react';
 import { LocalNotifications } from '@capacitor/local-notifications';
 
-export default function Todo({ isPremium }) {
-    const [tasks, setTasks] = useState(() => {
-        try {
-            const saved = localStorage.getItem('got-u-tasks');
-            return saved ? JSON.parse(saved) : [];
-        } catch (e) {
-            console.error("Error parsing tasks from localStorage", e);
-            return [];
-        }
-    });
+export default function Todo({ isPremium, tasks, setTasks }) {
     const [input, setInput] = useState('');
+    const [taskDate, setTaskDate] = useState('');
+    const [taskTime, setTaskTime] = useState('');
 
-    useEffect(() => {
-        localStorage.setItem('got-u-tasks', JSON.stringify(tasks));
-    }, [tasks]);
-
-    const addTask = (e) => {
+    const addTask = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
-        // Feature limitation for non-premium (just as an example)
         if (!isPremium && tasks.length >= 10) {
             alert("Upgrade to Pro to add more than 10 tasks!");
             return;
         }
 
-        setTasks([...tasks, { id: Date.now(), text: input, completed: false }]);
+        const newTask = {
+            id: Date.now(),
+            text: input,
+            completed: false,
+            dueDate: taskDate ? taskDate : null,
+            dueTime: taskTime ? taskTime : null,
+        };
+
+        setTasks([...tasks, newTask]);
+
+        // Auto-schedule notification if date is provided
+        if (taskDate) {
+            scheduleTaskNotification(newTask);
+        }
+
         setInput('');
+        setTaskDate('');
+        setTaskTime('');
     };
 
     const toggleTask = (id) => {
@@ -41,93 +45,129 @@ export default function Todo({ isPremium }) {
         setTasks(tasks.filter(t => t.id !== id));
     };
 
-    const scheduleReminder = async (task) => {
+    const scheduleTaskNotification = async (task) => {
+        if (!task.dueDate) return;
+
         try {
             await LocalNotifications.requestPermissions();
+
+            // Construct notification date
+            const dateStr = task.dueDate;
+            const timeStr = task.dueTime || "09:00"; // Default to 9 AM if no time
+            const scheduleDate = new Date(`${dateStr}T${timeStr}`);
+
+            if (scheduleDate <= new Date()) {
+                console.warn("Schedule date is in the worked. Skipping notification.");
+                return;
+            }
+
             await LocalNotifications.schedule({
                 notifications: [
                     {
                         title: "GOT u - Task Reminder",
                         body: task.text,
                         id: task.id,
-                        schedule: { at: new Date(Date.now() + 1000 * 60 * 60) }, // Remind in 1 hour
+                        schedule: { at: scheduleDate },
                         sound: null,
-                        attachments: null,
-                        actionTypeId: "",
-                        extra: null,
                     }
                 ]
             });
-            alert("Reminder scheduled for 1 hour from now!");
         } catch (e) {
             console.error(e);
-            alert("Reminders only work on mobile devices.");
         }
     };
 
     return (
-        <div className="max-w-md mx-auto h-full flex flex-col">
-            <h1 className="text-3xl font-black mb-8">Tasks</h1>
+        <div className="max-w-md mx-auto h-full flex flex-col pt-4">
+            <h1 className="text-4xl font-black mb-8 italic tracking-tighter">TASK MASTER</h1>
 
-            <form onSubmit={addTask} className="relative mb-8">
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="What's next?"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 focus:outline-none focus:border-primary transition-all text-lg"
-                />
+            <form onSubmit={addTask} className="space-y-4 mb-10">
+                <div className="relative">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Add a new challenge..."
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-6 focus:outline-none focus:border-primary transition-all text-xl font-medium"
+                    />
+                </div>
+
+                <div className="flex gap-2">
+                    <div className="flex-1 flex flex-col gap-1">
+                        <label className="text-[10px] uppercase tracking-widest text-text-dim ml-2">Due Date</label>
+                        <input
+                            type="date"
+                            value={taskDate}
+                            onChange={(e) => setTaskDate(e.target.value)}
+                            className="bg-white/5 border border-white/10 rounded-xl py-3 px-4 focus:outline-none focus:border-primary text-sm text-white"
+                        />
+                    </div>
+                    <div className="flex-1 flex flex-col gap-1">
+                        <label className="text-[10px] uppercase tracking-widest text-text-dim ml-2">Reminder Time</label>
+                        <input
+                            type="time"
+                            value={taskTime}
+                            onChange={(e) => setTaskTime(e.target.value)}
+                            className="bg-white/5 border border-white/10 rounded-xl py-3 px-4 focus:outline-none focus:border-primary text-sm text-white"
+                        />
+                    </div>
+                </div>
+
                 <button
                     type="submit"
-                    className="absolute right-2 top-2 bottom-2 bg-primary px-4 rounded-xl hover:scale-105 active:scale-95 transition-all"
+                    className="w-full bg-primary py-4 rounded-xl flex items-center justify-center gap-2 font-bold uppercase tracking-widest hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
                 >
-                    <Plus size={24} />
+                    <Plus size={20} />
+                    Add Task
                 </button>
             </form>
 
-            <div className="flex-1 space-y-3 overflow-y-auto pb-8 pr-2">
+            <div className="flex-1 space-y-4 overflow-y-auto pb-8 pr-2 custom-scrollbar">
                 <AnimatePresence initial={false}>
                     {tasks.map((task) => (
                         <motion.div
                             key={task.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            className="glass-card p-4 flex items-center justify-between group"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, x: 20 }}
+                            className={`glass-card p-5 flex items-center justify-between group transition-all ${task.completed ? 'opacity-50' : ''}`}
                         >
                             <div
                                 className="flex items-center space-x-4 cursor-pointer flex-1"
                                 onClick={() => toggleTask(task.id)}
                             >
                                 <div className={task.completed ? 'text-primary' : 'text-text-dim'}>
-                                    {task.completed ? <CheckCircle2 size={24} /> : <Circle size={24} />}
+                                    {task.completed ? <CheckCircle2 size={26} fill="currentColor" className="text-black" /> : <Circle size={26} />}
                                 </div>
-                                <span className={`text-lg transition-all ${task.completed ? 'line-through opacity-40' : ''}`}>
-                                    {task.text}
-                                </span>
+                                <div className="flex flex-col">
+                                    <span className={`text-lg font-semibold transition-all ${task.completed ? 'line-through' : ''}`}>
+                                        {task.text}
+                                    </span>
+                                    {task.dueDate && (
+                                        <div className="flex items-center gap-1.5 text-xs text-primary font-bold uppercase tracking-wider mt-0.5">
+                                            <Bell size={10} />
+                                            {task.dueDate} {task.dueTime ? `@ ${task.dueTime}` : ''}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className="flex items-center space-x-2">
-                                <button
-                                    onClick={() => scheduleReminder(task)}
-                                    className="text-text-dim hover:text-primary transition-colors p-2"
-                                >
-                                    <Bell size={20} />
-                                </button>
-                                <button
-                                    onClick={() => deleteTask(task.id)}
-                                    className="text-white/10 group-hover:text-red-500 transition-colors p-2"
-                                >
-                                    <Trash2 size={20} />
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => deleteTask(task.id)}
+                                className="text-white/10 hover:text-red-500 hover:bg-red-500/10 p-3 rounded-xl transition-all"
+                            >
+                                <Trash2 size={20} />
+                            </button>
                         </motion.div>
                     ))}
                 </AnimatePresence>
 
                 {tasks.length === 0 && (
-                    <div className="text-center py-20 opacity-20">
-                        <p className="text-xl italic">No tasks yet.</p>
+                    <div className="text-center py-24 opacity-30 flex flex-col items-center gap-4">
+                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+                            <ListTodo size={32} />
+                        </div>
+                        <p className="text-lg italic font-medium">Your checklist is clean.</p>
                     </div>
                 )}
             </div>

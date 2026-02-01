@@ -7,11 +7,20 @@ import CalendarView from './components/Calendar';
 
 function App() {
     const [activeTab, setActiveTab] = useState('home');
-    const isPremium = true; // All features unlocked
+    const [tasks, setTasks] = useState(() => {
+        try {
+            const saved = localStorage.getItem('got-u-tasks');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error("Error parsing tasks from localStorage", e);
+            return [];
+        }
+    });
+    const isPremium = true;
 
-    // Load premium status
     useEffect(() => {
-    }, []);
+        localStorage.setItem('got-u-tasks', JSON.stringify(tasks));
+    }, [tasks]);
 
     const tabs = [
         { id: 'todo', icon: ListTodo, label: 'Tasks' },
@@ -43,7 +52,7 @@ function App() {
                             exit={{ opacity: 0, x: 20 }}
                             className="p-6"
                         >
-                            <TodoView isPremium={isPremium} />
+                            <TodoView isPremium={isPremium} tasks={tasks} setTasks={setTasks} />
                         </motion.div>
                     )}
                     {activeTab === 'calendar' && (
@@ -54,7 +63,7 @@ function App() {
                             exit={{ opacity: 0, x: -20 }}
                             className="p-6"
                         >
-                            <CalendarView />
+                            <CalendarView tasks={tasks} />
                         </motion.div>
                     )}
 
