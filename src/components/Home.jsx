@@ -75,26 +75,11 @@ export default function Home() {
                 </h2>
             </motion.div>
 
-            {/* Logo and Signature */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-12 flex flex-col items-center gap-4"
-            >
-                <div className="logo-container">
-                    <img src="/src/assets/logo.png" alt="GOT u Logo" className="w-20 h-20 object-contain drop-shadow-2xl" />
-                    <div className="logo-blink-dot"></div>
-                </div>
-                <div className="dusty-container">
-                    <span className="dusty-text animate-dusty">~ By Shoaib</span>
-                </div>
-            </motion.div>
-
             {/* Animated Time Section */}
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
+                transition={{ duration: 1, ease: "easeOut" }}
                 className="space-y-4"
             >
                 <div className="flex flex-col items-center">

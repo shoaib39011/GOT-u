@@ -4,8 +4,10 @@ import { Calendar, ListTodo, Home, Crown, Settings } from 'lucide-react';
 import HomeView from './components/Home';
 import TodoView from './components/Todo';
 import CalendarView from './components/Calendar';
+import Splash from './components/Splash';
 
 function App() {
+    const [showSplash, setShowSplash] = useState(true);
     const [activeTab, setActiveTab] = useState('home');
     const [tasks, setTasks] = useState(() => {
         try {
@@ -31,72 +33,80 @@ function App() {
 
     return (
         <div className="flex flex-col h-screen overflow-hidden bg-black text-white" style={{ height: '100vh' }}>
-            {/* Main Content Areas */}
-            <main className="flex-1 overflow-y-auto relative pb-20">
-                <AnimatePresence mode="wait">
-                    {activeTab === 'home' && (
-                        <motion.div
-                            key="home"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            className="h-full"
-                        >
-                            <HomeView />
-                        </motion.div>
-                    )}
-                    {activeTab === 'todo' && (
-                        <motion.div
-                            key="todo"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
-                            className="p-6"
-                        >
-                            <TodoView isPremium={isPremium} tasks={tasks} setTasks={setTasks} />
-                        </motion.div>
-                    )}
-                    {activeTab === 'calendar' && (
-                        <motion.div
-                            key="calendar"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            className="p-6"
-                        >
-                            <CalendarView tasks={tasks} />
-                        </motion.div>
-                    )}
+            <AnimatePresence>
+                {showSplash ? (
+                    <Splash key="splash" onFinish={() => setShowSplash(false)} />
+                ) : (
+                    <>
+                        {/* Main Content Areas */}
+                        <main className="flex-1 overflow-y-auto relative pb-20">
+                            <AnimatePresence mode="wait">
+                                {activeTab === 'home' && (
+                                    <motion.div
+                                        key="home"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        className="h-full"
+                                    >
+                                        <HomeView />
+                                    </motion.div>
+                                )}
+                                {activeTab === 'todo' && (
+                                    <motion.div
+                                        key="todo"
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 20 }}
+                                        className="p-6"
+                                    >
+                                        <TodoView isPremium={isPremium} tasks={tasks} setTasks={setTasks} />
+                                    </motion.div>
+                                )}
+                                {activeTab === 'calendar' && (
+                                    <motion.div
+                                        key="calendar"
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        className="p-6"
+                                    >
+                                        <CalendarView tasks={tasks} />
+                                    </motion.div>
+                                )}
 
-                </AnimatePresence>
-            </main>
+                            </AnimatePresence>
+                        </main>
 
-            {/* Modern Bottom Navigation */}
-            <nav className="fixed bottom-0 left-0 right-0 h-20 bg-black/40 backdrop-blur-3xl border-t border-white/10 flex justify-around items-center px-4 z-50">
-                {tabs.map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive ? 'text-primary scale-110' : 'text-text-dim'
-                                }`}
-                        >
-                            <div className={`p-2 rounded-xl ${isActive ? 'bg-primary/20' : ''}`}>
-                                <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                            </div>
-                            <span className="text-[10px] font-bold uppercase tracking-widest">{tab.label}</span>
-                            {isActive && (
-                                <motion.div
-                                    layoutId="nav-dot"
-                                    className="w-1 h-1 rounded-full bg-primary"
-                                />
-                            )}
-                        </button>
-                    );
-                })}
-            </nav>
+                        {/* Modern Bottom Navigation */}
+                        <nav className="fixed bottom-0 left-0 right-0 h-20 bg-black/40 backdrop-blur-3xl border-t border-white/10 flex justify-around items-center px-4 z-50">
+                            {tabs.map((tab) => {
+                                const Icon = tab.icon;
+                                const isActive = activeTab === tab.id;
+                                return (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive ? 'text-primary scale-110' : 'text-text-dim'
+                                            }`}
+                                    >
+                                        <div className={`p-2 rounded-xl ${isActive ? 'bg-primary/20' : ''}`}>
+                                            <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
+                                        </div>
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">{tab.label}</span>
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="nav-dot"
+                                                className="w-1 h-1 rounded-full bg-primary"
+                                            />
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </nav>
+                    </>
+                )}
+            </AnimatePresence>
         </div >
     );
 }
