@@ -1,0 +1,7 @@
+{
+    "name": "got-u",
+    "integrations": {
+        "capacitor": {}
+    },
+    "type": "react"
+}

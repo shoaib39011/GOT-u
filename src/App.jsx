@@ -60,17 +60,7 @@ function App() {
                             <CalendarView />
                         </motion.div>
                     )}
-                    {activeTab === 'premium' && (
-                        <motion.div
-                            key="premium"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 1.1 }}
-                            className="p-6"
-                        >
-                            <PremiumView setPremium={setIsPremium} />
-                        </motion.div>
-                    )}
+
                 </AnimatePresence>
             </main>
 

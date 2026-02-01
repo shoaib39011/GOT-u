@@ -1,3 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6366f1;
+  --color-secondary: #ec4899;
+  --color-accent: #8b5cf6;
+  --color-bg-dark: #09090b;
+  --color-text-dim: #94a3b8;
+
+  --radius-xl: 12px;
+  --radius-2xl: 24px;
+}
+
 :root {
   --primary: #6366f1;
   --secondary: #ec4899;
@@ -50,9 +63,11 @@ body {
 ::-webkit-scrollbar {
   width: 4px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--glass-border);
   border-radius: 10px;
