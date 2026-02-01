@@ -72,3 +72,82 @@ body {
   background: var(--glass-border);
   border-radius: 10px;
 }
+
+/* Logo Edge Blink */
+@keyframes edge-blink {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+    box-shadow: 0 0 20px var(--primary);
+  }
+}
+
+.logo-container {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-blink-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  top: 5px;
+  right: 5px;
+  animation: edge-blink 2.5s infinite ease-in-out;
+  box-shadow: 0 0 10px white;
+}
+
+/* Dusty Powder Text Animation */
+.dusty-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  position: relative;
+  display: inline-block;
+}
+
+@keyframes dusty-sweep {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+    transform: translateX(-10px);
+    filter: blur(5px);
+  }
+
+  20% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+
+  80% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 100%);
+    opacity: 0;
+    transform: translateX(10px);
+    filter: blur(8px);
+  }
+}
+
+.animate-dusty {
+  animation: dusty-sweep 8s ease-in-out infinite;
+}

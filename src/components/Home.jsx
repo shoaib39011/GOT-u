@@ -75,11 +75,26 @@ export default function Home() {
                 </h2>
             </motion.div>
 
+            {/* Logo and Signature */}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-12 flex flex-col items-center gap-4"
+            >
+                <div className="logo-container">
+                    <img src="/src/assets/logo.png" alt="GOT u Logo" className="w-20 h-20 object-contain drop-shadow-2xl" />
+                    <div className="logo-blink-dot"></div>
+                </div>
+                <div className="dusty-container">
+                    <span className="dusty-text animate-dusty">~ By Shoaib</span>
+                </div>
+            </motion.div>
+
             {/* Animated Time Section */}
             <motion.div
-                initial={{ y: 100, opacity: 0 }}
+                initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 1, ease: "easeOut" }}
+                transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
                 className="space-y-4"
             >
                 <div className="flex flex-col items-center">
@@ -99,14 +114,13 @@ export default function Home() {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
+                    transition={{ delay: 0.8 }}
                     className="glass-card px-6 py-4 mt-8 flex flex-col items-center"
                 >
                     <span className="text-xs uppercase tracking-widest text-text-dim">Your day started</span>
                     <div className="text-2xl font-bold mt-1">
                         {hrs} hrs {mins} mins ago
                     </div>
-                    <div className="text-[10px] text-text-dim mt-2 opacity-50">MANAGE QUOTES BY TAPPING BACKGROUND</div>
                 </motion.div>
             </motion.div>
 
