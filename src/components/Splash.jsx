@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../assets/logo.png';
 
 export default function Splash({ onFinish }) {
     useEffect(() => {
@@ -23,7 +24,7 @@ export default function Splash({ onFinish }) {
                 className="flex flex-col items-center gap-6"
             >
                 <div className="logo-container">
-                    <img src="/src/assets/logo.png" alt="GOT u Logo" className="w-32 h-32 object-contain drop-shadow-[0_0_30px_rgba(99,102,241,0.3)]" />
+                    <img src={logo} alt="GOT u Logo" className="w-32 h-32 object-contain drop-shadow-[0_0_30px_rgba(99,102,241,0.3)]" />
                     <div className="logo-blink-dot"></div>
                 </div>
 
