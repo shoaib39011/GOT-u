@@ -1,0 +1,6 @@
+{
+    "appId": "com.gotu.app",
+    "appName": "GOT u",
+    "webDir": "dist",
+    "bundledWebRuntime": false
+}
