@@ -7,7 +7,22 @@ const DEFAULT_QUOTES = [
     "Your only limit is you.",
     "Make today count.",
     "Focus on the process, not the outcome.",
-    "Believe in the person you're becoming."
+    "Believe in the person you're becoming.",
+    "- Today's difficulty is for better tommorow -",
+    "- Until you find strong purpose, You won't start -",
+    "- World cannot satisfy everyone -",
+    "- Keep going, no matter what! -",
+    "- Worst can occur is death, just go for it -",
+    "- It's you and your thoughts -",
+    "- Fear only exist in mind -",
+    "- Build your empire to sit on.... -",
+    "- Hesitation will only leads to loss -",
+    "- Efforst won't go waste if put in right place -",
+    " - Without consistency, You cannot complete what you started -",
+    "words show thought, actions mean it",
+    "words cause change and actions build it",
+    "Real difficulty is to regulate yourself ",
+    "Inshallah, ONE DAY...."
 ];
 
 export default function Home() {
